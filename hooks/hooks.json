@@ -1,0 +1,4 @@
+{
+  "description": "The plush Clawd: its drawing above the prompt and its moods, driven by Claude's turns and tool calls",
+  "modules": ["./register.tsx"]
+}

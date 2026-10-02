@@ -1,0 +1,12 @@
+{
+  "fps": 24,
+  "columns": 16,
+  "rows": 6,
+  "moods": {
+    "idle": { "frames": 48, "loop": true },
+    "working": { "frames": 24, "loop": true },
+    "happy": { "frames": 32, "loop": false },
+    "sleepy": { "frames": 64, "loop": true },
+    "oops": { "frames": 20, "loop": false }
+  }
+}

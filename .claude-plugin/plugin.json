@@ -1,0 +1,17 @@
+{
+  "name": "plushie",
+  "version": "0.1.0",
+  "description": "A plush Clawd above the prompt that reacts to what Claude is doing.",
+  "author": {
+    "name": "Xiaoyi Chen"
+  },
+  "userConfig": {
+    "drag": {
+      "type": "boolean",
+      "title": "Drag Clawd",
+      "description": "Press on Clawd and drag it along the band above the prompt.",
+      "required": false,
+      "default": true
+    }
+  }
+}
