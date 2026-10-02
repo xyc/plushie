@@ -1,14 +1,12 @@
 # plushie
 
-<p align="center"><img src="docs/media/plushie.png" width="420" alt="A fluffy orange plush Clawd with hearts floating above it"></p>
+<p align="center"><img src="docs/media/demo.gif" width="560" alt="Clawd being patted, holding a keyboard while Claude runs a command, then jumping when it's done"></p>
 
 A plush Clawd that lives above the Claude Code prompt and reacts to what
 Claude is doing: idles and blinks, wiggles while a turn runs, holds a little
 prop for each tool, wobbles when a tool fails or you interrupt, jumps after a
 long turn, blushes when you say thanks, dozes off when left alone. Pat it,
 or pick it up and move it.
-
-<p align="center"><img src="docs/media/demo.gif" width="560" alt="Clawd being patted, holding a keyboard while Claude runs a command, then jumping when it's done"></p>
 
 It is a Claude Code mod: frames baked in Blender, played in the terminal by
 swapping an `Image`'s source with `$.ui.blit`. Terminals with an image
@@ -82,3 +80,9 @@ claude plugin test .
 
 The tests drive every reaction through the real event that triggers it,
 each with its switch on and off.
+
+## License
+
+MIT for the code, the Blender and sound scripts, and the frames and sounds
+they make; see [LICENSE](LICENSE). The Clawd character and Claude Code are
+Anthropic's, and the license doesn't cover them.
