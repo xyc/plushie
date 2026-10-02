@@ -1,7 +1,7 @@
 {
   "name": "plushie",
-  "version": "0.1.0",
-  "description": "A plush Clawd above the prompt that reacts to what Claude is doing.",
+  "version": "0.2.0",
+  "description": "A plush Clawd above the prompt that reacts to what Claude is doing: works, celebrates, wobbles, blushes, naps, and can be patted and dragged.",
   "author": {
     "name": "Xiaoyi Chen"
   },
@@ -9,7 +9,56 @@
     "drag": {
       "type": "boolean",
       "title": "Drag Clawd",
-      "description": "Press on Clawd and drag it along the band above the prompt.",
+      "description": "Press on Clawd and drag it along the band above the prompt; it dangles while held and lands where you let go.",
+      "required": false,
+      "default": true
+    },
+    "pats": {
+      "type": "boolean",
+      "title": "Pat Clawd",
+      "description": "A click on Clawd without dragging pats it: a squish, a happy squint and hearts.",
+      "required": false,
+      "default": true
+    },
+    "toolProps": {
+      "type": "boolean",
+      "title": "Tool props",
+      "description": "Clawd holds a prop for the tool Claude is using: a magnifier to read or search, knitting needles to edit, a keyboard for the shell, binoculars for the web.",
+      "required": false,
+      "default": true
+    },
+    "miniClawds": {
+      "type": "boolean",
+      "title": "Mini Clawds",
+      "description": "Each running subagent gets a half-size Clawd beside the main one; it walks off when the subagent finishes.",
+      "required": false,
+      "default": true
+    },
+    "stuffing": {
+      "type": "boolean",
+      "title": "Stuffed by context",
+      "description": "Clawd grows rounder as the context window fills and deflates with a sigh when it is compacted.",
+      "required": false,
+      "default": true
+    },
+    "blush": {
+      "type": "boolean",
+      "title": "Blush at kind words",
+      "description": "Thanks or praise in a prompt makes Clawd blush.",
+      "required": false,
+      "default": true
+    },
+    "fidgets": {
+      "type": "boolean",
+      "title": "Idle fidgets",
+      "description": "Left alone, Clawd now and then looks around, scratches, yawns or hops.",
+      "required": false,
+      "default": true
+    },
+    "sounds": {
+      "type": "boolean",
+      "title": "Sound effects",
+      "description": "Little sounds for pats, jumps, wobbles, blushes, being picked up and put down, deflating and dozing off.",
       "required": false,
       "default": true
     }

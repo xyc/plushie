@@ -2,11 +2,94 @@
   "fps": 24,
   "columns": 16,
   "rows": 6,
-  "moods": {
-    "idle": { "frames": 48, "loop": true },
-    "working": { "frames": 24, "loop": true },
-    "happy": { "frames": 32, "loop": false },
-    "sleepy": { "frames": 64, "loop": true },
-    "oops": { "frames": 20, "loop": false }
+  "clips": {
+    "idle": {
+      "frames": 48,
+      "loop": true
+    },
+    "idle-plump": {
+      "frames": 48,
+      "loop": true
+    },
+    "idle-stuffed": {
+      "frames": 48,
+      "loop": true
+    },
+    "working": {
+      "frames": 24,
+      "loop": true
+    },
+    "working-magnifier": {
+      "frames": 24,
+      "loop": true
+    },
+    "working-needles": {
+      "frames": 24,
+      "loop": true
+    },
+    "working-keyboard": {
+      "frames": 24,
+      "loop": true
+    },
+    "working-binoculars": {
+      "frames": 24,
+      "loop": true
+    },
+    "working-plump": {
+      "frames": 24,
+      "loop": true
+    },
+    "working-stuffed": {
+      "frames": 24,
+      "loop": true
+    },
+    "happy": {
+      "frames": 32,
+      "loop": false
+    },
+    "sleepy": {
+      "frames": 64,
+      "loop": true
+    },
+    "oops": {
+      "frames": 36,
+      "loop": false
+    },
+    "held": {
+      "frames": 24,
+      "loop": true
+    },
+    "drop": {
+      "frames": 16,
+      "loop": false
+    },
+    "deflate": {
+      "frames": 24,
+      "loop": false
+    },
+    "blush": {
+      "frames": 32,
+      "loop": false
+    },
+    "pat": {
+      "frames": 28,
+      "loop": false
+    },
+    "fidget-look": {
+      "frames": 36,
+      "loop": false
+    },
+    "fidget-scratch": {
+      "frames": 32,
+      "loop": false
+    },
+    "fidget-yawn": {
+      "frames": 40,
+      "loop": false
+    },
+    "fidget-hop": {
+      "frames": 20,
+      "loop": false
+    }
   }
 }

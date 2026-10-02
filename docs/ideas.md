@@ -12,14 +12,19 @@ oops fix were added as 14 and 15. Every numbered idea has a section below.
 
 | Order | Idea | Needs | Status |
 | :-- | :-- | :-- | :-- |
-| 1 | [14 · Drag](#14--drag) — sideways; spike passed, now held and drop clips + remembered position | code + 2 clips | queued |
-| 2 | [15 · A readable oops](#15--a-readable-oops) | `pose()` change + sweat drop prop, ~36 frames | queued |
-| 3 | [2 · Eyes that follow you](#2--eyes-that-follow-you) | 2 eye-direction variants of idle | queued |
-| 4 | [4 · Tool props](#4--tool-props) | 4 props, a working variant each | queued |
-| 5 | [5 · Subagents as mini Clawds](#5--subagents-as-mini-clawds) | code only | queued |
-| 6 | [6 · Stuffed as the context fills](#6--stuffed-as-the-context-fills) | 2 body sizes + a deflate clip | queued |
-| 7 | [8 · Kind words make it blush](#8--kind-words-make-it-blush) | blush clip | queued |
-| 8 | [1 · Random idle fidgets](#1--random-idle-fidgets) | 4–5 short clips, ~100 frames | queued |
+| 1 | [14 · Drag](#14--drag) — sideways; held and drop clips, remembered position | code + 2 clips | **built** |
+| 2 | [3 · Pats](#3--pats) | pat clip with hearts | **built** |
+| 3 | [15 · A readable oops](#15--a-readable-oops) | `pose()` change + sweat drop prop, 36 frames | **built** |
+| 4 | [2 · Eyes that follow you](#2--eyes-that-follow-you) | 2 gaze variants of idle | **removed** |
+| 5 | [4 · Tool props](#4--tool-props) | 4 props, a working variant each | **built** |
+| 6 | [5 · Subagents as mini Clawds](#5--subagents-as-mini-clawds) | code only | **built** |
+| 7 | [6 · Stuffed as the context fills](#6--stuffed-as-the-context-fills) | 2 body sizes + a deflate clip | **built** |
+| 8 | [8 · Kind words make it blush](#8--kind-words-make-it-blush) | blush clip | **built** |
+| 9 | [1 · Random idle fidgets](#1--random-idle-fidgets) | 4 short clips, 128 frames | **built** |
+
+"Built" means the code is in and every reaction has a test through
+`claude plugin test` driving the real event, on and off. Seen in a real
+terminal: sideways drag (by hand) and idle in Ghostty inside a Tahoe VM.
 
 Bake cost is about 6 seconds a frame at 256×192 on the M2 Max, so a 24-frame
 clip is ~2.5 minutes.
@@ -37,7 +42,7 @@ What the person writes:
 ```
 /plushie off blush        # stop blushing
 /plushie on blush
-/plushie features         # list every switch and its state
+/plushie reactions        # list every switch and its state
 ```
 
 What the manifest declares (one entry per feature):
@@ -71,7 +76,7 @@ must survive a reload (drag position) lives in `$.store`.
 | Switch | Idea |
 | :-- | :-- |
 | `drag` | [14 · Drag](#14--drag) |
-| `eyes` | [2 · Eyes that follow you](#2--eyes-that-follow-you) |
+| `pats` | [3 · Pats](#3--pats) |
 | `toolProps` | [4 · Tool props](#4--tool-props) |
 | `miniClawds` | [5 · Subagents as mini Clawds](#5--subagents-as-mini-clawds) |
 | `stuffing` | [6 · Stuffed as the context fills](#6--stuffed-as-the-context-fills) |
@@ -153,6 +158,12 @@ Once it works: two baked clips, **held** (~24 frames: legs dangling, a slight
 swing) and **drop** (~16 frames: fall, squash, settle), and the offset kept
 in `$.store` under `position`.
 
+### 3 · Pats
+
+A press that never moves a column is a pat: Clawd squishes, squints happily
+and three hearts float up (28 frames). Shares the grab region with drag; the
+region is there when either switch is on. Switch: `pats`.
+
 ### 15 · A readable oops
 
 Today's oops twists Clawd ±14° around its vertical axis for 0.8 s with an 8%
@@ -175,13 +186,21 @@ both `MOODS` (blender/plush.py) and the manifest.
 
 ### 2 · Eyes that follow you
 
+**Removed (2026-10-02).** Built and tried, then cut: the glance didn't read
+well enough to earn its two clips, and with it on, the idle Clawd showed a
+look-up variant where a stuffed one belonged. What follows is the design as
+it was.
+
 While you type, Clawd glances down at the prompt; while Claude answers, it
 looks up at the transcript. Two eye-direction variants of idle (pupils down,
 pupils up), the beads moved rather than redrawn.
 
-Triggers to verify against the declarations: whether `prompt.edit` fires per
-keystroke (look down while it does, back to centre after a pause), and
-`turn.step` while an answer streams (look up). Switch: `eyes`.
+Triggers: `prompt.edit` (one edit in the prompt box) looks down for 1.5 s
+after the last keystroke; a finished main turn looks up for 5 s, as if reading
+the answer. The edit hook passes each keystroke on at once and notes the time
+on the side, so typing never waits on Clawd. A test can't raise `prompt.edit`
+(it is the engine's prompt box), so looking down is untested; looking up is.
+Switch: `eyes`.
 
 ### 4 · Tool props
 
@@ -190,14 +209,17 @@ before `next(e)` and cleared after it returns:
 
 | Tools | Prop |
 | :-- | :-- |
-| `Read`, `Grep`, `Glob` | magnifying glass |
+| `Read` (and `Grep`, `Glob`, which this Claude Code version doesn't ship) | magnifying glass |
 | `Edit`, `Write`, `NotebookEdit` | knitting needles |
 | `Bash` | tiny keyboard |
 | `WebFetch`, `WebSearch` | binoculars |
 
 Four props modelled in Blender, each a variant of the working clip
-(4 × 24 = 96 frames). Calls under 300 ms skip the prop, or Clawd would flicker
-through props on a burst of reads. Switch: `toolProps`.
+(4 × 24 = 96 frames). Every call shows its prop for at least 1.5 s: reads and
+edits finish in milliseconds, so a prop shown only while the call runs would
+almost never appear, and the hold also keeps a burst of reads on one steady
+magnifier. (A first version skipped calls under 300 ms to avoid flicker; it
+hid the prop for exactly the commonest tools.) Switch: `toolProps`.
 
 ### 5 · Subagents as mini Clawds
 
@@ -231,17 +253,33 @@ Switch: `stuffing`.
 ### 1 · Random idle fidgets
 
 Every 15–40 s idle plays a short random clip instead of the breathing loop:
-look around, scratch, yawn, hop, glance at the prompt. The biggest single gain
-in seeming alive — a two-second loop is how a pet starts reading as a GIF.
+look around (36 frames), scratch its head (32), a yawn and stretch (40), two
+little hops (20). The biggest single gain in seeming alive — a two-second
+loop is how a pet starts reading as a GIF. A fidget is the weakest one-off
+clip, so any other reaction replaces it, and a turn starting cuts it short.
+
+A stub arm raised from where it hangs stays inside the body's outline (the
+happy jump's arms never show, for the same reason), so the fidgets move the
+shoulder out and up while an arm is raised; the clips baked before them keep
+the shoulder where it was. Switch: `fidgets`.
+
+## The shadow
+
+Clawd's floor shadow was baked into every frame and spread wider than the
+frame, so the box the terminal draws it in sliced it off in straight lines
+at the left, right and bottom edges. Fading it out by script afterwards left
+a dark fringe on the fur that had been rendered over it.
+
+Each frame is now rendered twice — Clawd alone, and the shadow alone (Clawd
+hidden from the camera but still blocking the light) — and
+`blender/composite.py` lays one under the other: kept to a soft oval pool
+under the feet, faded before every edge, at a strength set in one constant.
+Changing the shadow, or dropping it, is a re-run of the compositor rather
+than a rebake.
 
 ## Later
 
 Kept for when the queue is done; not designed yet.
-
-### 3 · Pats
-
-A press without movement is a pat: hearts and a wiggle. Shares the pointer
-path with drag.
 
 ### 7 · Mood streaks
 

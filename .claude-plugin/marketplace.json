@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "plushie",
+  "description": "A plush Clawd that lives above the Claude Code prompt",
+  "owner": {
+    "name": "Xiaoyi Chen"
+  },
+  "plugins": [
+    {
+      "name": "plushie",
+      "description": "A plush Clawd above the prompt that reacts to what Claude is doing: works, celebrates, wobbles, blushes, naps, and can be patted and dragged.",
+      "version": "0.2.0",
+      "source": "./",
+      "category": "fun"
+    }
+  ]
+}
