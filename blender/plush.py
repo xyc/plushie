@@ -218,7 +218,9 @@ def build_props(body, rig, hand):
     props = {}
 
     # A magnifying glass held out in front, its lens facing the camera.
-    mag = group("Magnifier", hand, (0.05, -0.36, 0.14), (math.radians(80), 0, math.radians(-20)))
+    # Out past the front fur (it reaches about 0.45 in front of the shoulder),
+    # the lens turned to face the camera.
+    mag = group("Magnifier", hand, (0.0, -0.64, 0.12), (math.radians(80), 0, math.radians(20)))
     mesh_object("MagRing", ops.primitive_torus_add, mag, (0, 0, 0), material=brass,
                 major_radius=0.17, minor_radius=0.024)
     mesh_object("MagLens", ops.primitive_cylinder_add, mag, (0, 0, 0), material=glass,
@@ -228,7 +230,7 @@ def build_props(body, rig, hand):
     props["magnifier"] = mag
 
     # Knitting: two crossed needles over a ball of yarn.
-    knit = group("Needles", hand, (0.12, -0.34, 0.02))
+    knit = group("Needles", hand, (0.0, -0.62, 0.0))
     knit.scale = (1.5, 1.5, 1.5)
     mesh_object("Yarn", ops.primitive_uv_sphere_add, knit, (0, 0, -0.02), material=yarn,
                 radius=0.08, segments=24, ring_count=12)

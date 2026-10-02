@@ -447,4 +447,22 @@ describe('register', () => {
     expect((await band.find({ key: 'pet' }))?.props.left).toBe(54)
     await band.unmount()
   })
+
+  test('minis spawned in a full band get new Images when it shrinks', async ($, on) => {
+    answerTheWorld(on)
+    on('agent.spawn', () => ({ model: 'haiku', agentId: 'a1' }))
+    await $.session.start(START)
+    const band = await $.ui.mount({ ...BAND, surface: 'terminal' })
+
+    await $.agent.spawn({ tool_use_id: 'u1', prompt: 'look around', description: 'look', subagentType: 'Explore' } as never)
+    await band.redraw()
+    expect((await band.find({ key: 'mini-a1' }))?.props.columns).toBe(8)
+
+    // The agent list under the prompt takes a row from the band.
+    await band.redraw({ ...BAND.props, maxRows: 5 })
+    expect(await band.find({ key: 'mini-a1' })).toBeUndefined()
+    const shrunk = await band.find({ key: 'mini-a1-5' })
+    expect([shrunk?.props.columns, shrunk?.props.rows]).toEqual([5, 2])
+    await band.unmount()
+  })
 })

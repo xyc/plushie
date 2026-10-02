@@ -42,10 +42,10 @@ type Plushie = {
   bandColumns: number
   // The size the pet is drawn at: the manifest's, or less when the band is short.
   petColumns: number
-  // The pet Image's key, which changes with its size: an Image drawn again at
+  // Added to every Image key when the band is short: an Image drawn again at
   // another size keeps its old placement in the terminal and is clipped, so a
-  // new size gets a new Image.
-  petKey: string
+  // new size gets new Images (the pet's and the minis', whose size follows it).
+  sizeSuffix: string
   // A press on the pet: where in it the pointer took hold, and whether it has
   // moved yet (a press that never moves is a pat).
   grab: { offset: number; downColumn: number; isMoved: boolean } | null
@@ -140,10 +140,10 @@ async function tick(s: Plushie) {
   }
   pet.sync(await host.now())
 
-  const blits = [host.blit(requestId, s.petKey, fileOf(s, pet.clip, pet.fileFrame()))]
+  const blits = [host.blit(requestId, KEY + s.sizeSuffix, fileOf(s, pet.clip, pet.fileFrame()))]
   const working = pet.framesOf('working')
   for (const mini of pet.minis) {
-    blits.push(host.blit(requestId, `mini-${mini.id}`, fileOf(s, 'working', mini.frame % working)))
+    blits.push(host.blit(requestId, `mini-${mini.id}${s.sizeSuffix}`, fileOf(s, 'working', mini.frame % working)))
   }
   const [main] = await Promise.all(blits)
 
@@ -177,7 +177,7 @@ export function register(on: On, options: PluginOptions) {
     left: null,
     bandColumns: 0,
     petColumns: 0,
-    petKey: KEY,
+    sizeSuffix: '',
     grab: null,
   }
 
@@ -380,13 +380,14 @@ export function register(on: On, options: PluginOptions) {
     const rows = Math.min(manifest.rows, e.props.maxRows)
     const columns = Math.round((manifest.columns * rows) / manifest.rows)
     s.petColumns = columns
-    s.petKey = rows === manifest.rows ? KEY : `${KEY}-${rows}`
+    s.sizeSuffix = rows === manifest.rows ? '' : `-${rows}`
     const petLeft = leftIn(s, s.bandColumns, columns)
 
     // Mini Clawds stand to the pet's left, or to its right when there's no
-    // room; a leaving one walks off a column every other frame.
-    const miniColumns = Math.floor(columns / 2)
-    const miniRows = Math.floor(rows / 2)
+    // room; a leaving one walks off a column every other frame. Half the
+    // pet's height, never under two rows, in the frames' proportions.
+    const miniRows = Math.max(2, Math.floor(rows / 2))
+    const miniColumns = Math.round((manifest.columns * miniRows) / manifest.rows)
     const working = pet.framesOf('working')
     const minis: RenderElement[] = []
     pet.minis.forEach((mini, i) => {
@@ -399,7 +400,7 @@ export function register(on: On, options: PluginOptions) {
       minis.push(
         <Box key={`mini-slot-${mini.id}`} position="absolute" left={x} top={rows - miniRows}>
           <Image
-            key={`mini-${mini.id}`}
+            key={`mini-${mini.id}${s.sizeSuffix}`}
             source={{ file: fileOf(s, 'working', mini.frame % working), format: 'png' }}
             columns={miniColumns}
             rows={miniRows}
@@ -426,7 +427,7 @@ export function register(on: On, options: PluginOptions) {
           ) : null}
           <Box key="pet" position="absolute" left={petLeft} top={0}>
             <Image
-              key={s.petKey}
+              key={KEY + s.sizeSuffix}
               source={{ file: fileOf(s, pet.clip, pet.fileFrame()), format: 'png' }}
               columns={columns}
               rows={rows}
